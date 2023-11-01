@@ -14,6 +14,7 @@ public class FTPHandler implements SUL<String, String>
 {
 	public String ip;
 	public Integer port;
+	String resetCommand;
 	public String[] responseCodes;
 	public static Socket ftpSocket;
 	public static PrintWriter out;
@@ -22,6 +23,14 @@ public class FTPHandler implements SUL<String, String>
 	private boolean VERBOSE;
 	private static final String CRLF = "\r\n";
 
+	public FTPHandler(final String ip, final Integer port, final String[] responseCodes, final boolean debug, String resetCommand) {
+		this.ip = ip;
+		this.port = port;
+		this.responseCodes = responseCodes;
+		this.VERBOSE = debug;
+		this.resetCommand=resetCommand;
+	}
+	
 	public static void createConnection(final String ip, final Integer port, final String[] responseCodes) throws IOException {
 		try {
 			FTPHandler.ftpSocket = new Socket(ip, port);
@@ -32,13 +41,6 @@ public class FTPHandler implements SUL<String, String>
 		catch (IOException e) {
 			System.out.println("Error:" + e);
 		}
-	}
-
-	public FTPHandler(final String ip, final Integer port, final String[] responseCodes, final boolean debug) {
-		this.ip = ip;
-		this.port = port;
-		this.responseCodes = responseCodes;
-		this.VERBOSE = debug;
 	}
 
 	public void pre() {
@@ -58,7 +60,8 @@ public class FTPHandler implements SUL<String, String>
 			System.out.println("[DEBUG] Shutting down SUL");
 		}
 		try {
-			FTPHandler.out.write("quit\r\n");
+			FTPHandler.out.write(resetCommand+"\r\n");
+			System.out.println(resetCommand);
 			FTPHandler.out.flush();
 			FTPHandler.out.close();
 			FTPHandler.in.close();

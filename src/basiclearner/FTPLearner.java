@@ -27,6 +27,7 @@ public class FTPLearner
 		int port;
 		boolean debug;
 		String[] commandArray;
+		String resetCommand;
 		try {
 			final String responseCodesString = properties.getProperty("responsesToIgnore");
 			responseCodes = responseCodesString.split(",");
@@ -35,13 +36,14 @@ public class FTPLearner
 			debug = Boolean.parseBoolean(properties.getProperty("debug"));
 			final String commandsString = properties.getProperty("commands");
 			commandArray = commandsString.split(",");
+			resetCommand = properties.getProperty("resetCommand");
 		}
 		catch (Exception e) {
 			System.out.println("[ERROR] The config.properties file requires the following fields: \n- responseToIgnore \n- ip \n- port \n- commands\n- debug");
 			return;
 		}
 
-		SUL<String, String> sul = (SUL<String, String>)new FTPHandler(ip, port, responseCodes, debug);
+		SUL<String, String> sul = (SUL<String, String>)new FTPHandler(ip, port, responseCodes, debug,resetCommand);
 		Collection<String> inputAlphabet = ImmutableSet.copyOf((String[])commandArray);
 		System.out.println("[LOG]Learning ... ");
 		BasicLearner.runControlledExperiment((SUL<String, String>)sul, BasicLearner.LearningMethod.LStar, BasicLearner.TestingMethod.RandomWalk, inputAlphabet);

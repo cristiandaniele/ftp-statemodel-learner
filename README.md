@@ -21,6 +21,10 @@ Before running the learner, you need to edit the *config.properties*. Here you f
 
     [the default value is false] 
 
+- **resetCommand**: QUIT
+
+    [*the command used by FTP to close a session. You don't have to add this command into "commands"*]
+
 ## Running the learner 
 
 - **Via jar file:**
