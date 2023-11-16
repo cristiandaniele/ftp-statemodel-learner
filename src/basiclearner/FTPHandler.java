@@ -9,7 +9,8 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import de.learnlib.api.SUL;
-
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
 public class FTPHandler implements SUL<String, String>
 {
 	public String ip;
@@ -21,6 +22,7 @@ public class FTPHandler implements SUL<String, String>
 	public static BufferedReader in;
 	public static Scanner scan;
 	private boolean VERBOSE;
+	FTPClient ftpClient;
 	private static final String CRLF = "\r\n";
 
 	public FTPHandler(final String ip, final Integer port, final String[] responseCodes, final boolean debug, String resetCommand) {
@@ -29,10 +31,13 @@ public class FTPHandler implements SUL<String, String>
 		this.responseCodes = responseCodes;
 		this.VERBOSE = debug;
 		this.resetCommand=resetCommand;
+		
+		ftpClient = new FTPClient();
 	}
 	
 	public static void createConnection(final String ip, final Integer port, final String[] responseCodes) throws IOException {
 		try {
+			
 			FTPHandler.ftpSocket = new Socket(ip, port);
 			FTPHandler.out = new PrintWriter(FTPHandler.ftpSocket.getOutputStream(), true);
 			FTPHandler.in = new BufferedReader(new InputStreamReader(FTPHandler.ftpSocket.getInputStream()));
@@ -60,8 +65,7 @@ public class FTPHandler implements SUL<String, String>
 			System.out.println("[DEBUG] Shutting down SUL");
 		}
 		try {
-			FTPHandler.out.write(resetCommand+"\r\n");
-			System.out.println(resetCommand);
+			FTPHandler.out.write(resetCommand+CRLF);
 			FTPHandler.out.flush();
 			FTPHandler.out.close();
 			FTPHandler.in.close();
@@ -95,8 +99,10 @@ public class FTPHandler implements SUL<String, String>
 	public String makeTransition(final String input) throws IOException {
 		FTPHandler.out.write(String.valueOf(input) + "\r\n");
 		FTPHandler.out.flush();
-		String response;
-		for (response = FTPHandler.in.readLine(); containsResponseCode(response, this.responseCodes); response = FTPHandler.in.readLine()) {}
+		String response= FTPHandler.in.readLine();
+		while ( containsResponseCode(response, this.responseCodes)) {
+			response = FTPHandler.in.readLine();
+		}
 		if (this.VERBOSE) {
 			System.out.println("[DEBUG] " + input + " -> " + response.substring(0, 3) + " (" + response + ")");
 		}

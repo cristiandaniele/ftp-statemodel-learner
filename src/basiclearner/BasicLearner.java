@@ -308,8 +308,8 @@ public class BasicLearner {
 			System.out.println("result written to " + file.getAbsolutePath());
 		} catch (Exception e) {
 			if (verboseError) {
-				System.err.println("Warning: Install graphviz to convert dot-files to PDF");
-				System.err.println(e.getMessage());
+//				System.err.println("Warning: Install graphviz to convert dot-files to PDF");
+//				System.err.println(e.getMessage());
 			}
 		}
 		dotWriter.close();
