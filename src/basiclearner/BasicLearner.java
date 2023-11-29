@@ -280,7 +280,7 @@ public class BasicLearner {
 					learningSetup.nrResets, learnlibAlphabet);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			System.out.println("[ERROR]Cannot connect to the server, connection refused. Is it your FTP server online?:/");
+			System.out.println(e+" [ERROR]Cannot connect to the server, connection refused. Is it your FTP server online?:/");
 		}
 	}
 

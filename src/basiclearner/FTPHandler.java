@@ -83,6 +83,9 @@ public class FTPHandler implements SUL<String, String>
 		}
 		catch (IOException e) {
 			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return output;
 	}
@@ -95,17 +98,66 @@ public class FTPHandler implements SUL<String, String>
 		}
 		return false;
 	}
+	private static boolean containsResponseCode(String input) {
+		   // Iterate through each character in the string
+        for (int i = 0; i < input.length() - 2; i++) {
+            // Check if the current and the next two characters form a sequence of three consecutive digits
+            if (Character.isDigit(input.charAt(i)) &&
+                Character.isDigit(input.charAt(i + 1)) &&
+                Character.isDigit(input.charAt(i + 2))) {
+                return true; // If a sequence of three consecutive digits is found, return true
+            }
+        }
+        return false; // No sequence of three consecutive digits found in the string
+    }
+	private static String readLastNonEmptyResponse(int timeoutMillis) throws IOException {
+        String lastNonEmptyResponse = null;
+        long startTime = System.currentTimeMillis();
 
-	public String makeTransition(final String input) throws IOException {
+        while (true) {
+            if (in.ready()) {
+                // If there is data to read, read the line
+                String response = in.readLine();
+                if (response != null && !response.isEmpty() ) {
+                    // Update the last non-empty response
+                    lastNonEmptyResponse = response;
+                }
+            }
+
+            long currentTime = System.currentTimeMillis();
+
+            if (currentTime - startTime > timeoutMillis) {
+                // If the timeout has elapsed, break the loop
+            	if(!containsResponseCode(lastNonEmptyResponse)) {
+            		startTime = System.currentTimeMillis();
+            	}
+            	else {
+            		break;
+            	}
+            }
+            // Sleep for a short duration before checking again
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Return the last non-empty response (may be null if none were received)
+        return lastNonEmptyResponse;
+    }
+
+	public String makeTransition(final String input) throws IOException, InterruptedException {
 		FTPHandler.out.write(String.valueOf(input) + "\r\n");
 		FTPHandler.out.flush();
-		String response= FTPHandler.in.readLine();
-		while ( containsResponseCode(response, this.responseCodes)) {
-			response = FTPHandler.in.readLine();
+		int timeoutMillis = 150;
+		String lastNonEmptyResponse = readLastNonEmptyResponse(timeoutMillis);
+		while ( containsResponseCode(lastNonEmptyResponse, this.responseCodes)) {
+			lastNonEmptyResponse = readLastNonEmptyResponse(timeoutMillis);
 		}
 		if (this.VERBOSE) {
-			System.out.println("[DEBUG] " + input + " -> " + response.substring(0, 3) + " (" + response + ")");
+			System.out.println("[DEBUG] " + input + " -> " + lastNonEmptyResponse.substring(0, 3) + " (" + lastNonEmptyResponse + ")");
 		}
-		return response.substring(0, 3);
+		return lastNonEmptyResponse.substring(0, 3);
 	}
 }
