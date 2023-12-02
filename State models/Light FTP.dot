@@ -1,0 +1,27 @@
+digraph  {
+s0;
+s1;
+s2;
+s3;
+s4;
+s0 -> s1  [key=0, label="USER ubuntu / 331"];
+s0 -> s0  [key=0, label="others /{211,215,530,200,214,500,501}"];
+s1 -> s2  [key=0, label="PASS ubuntu / 230"];
+s1 -> s1  [key=0, label="others /{211,215,331,200,530,214,500,501}"];
+s2 -> s1  [key=0, label="USER ubuntu / 331"];
+s2 -> s3  [key=0, label="epsv / 229"];
+s2 -> s3  [key=1, label="pasv / 227"];
+s2 -> s4  [key=0, label="PWD / 257"];
+s2 -> s4  [key=1, label="LIST / 451"];
+s2 -> s4  [key=2, label="MLSD / 451"];
+s2 -> s2  [key=0, label="others /{550,211,226,215,230,200,214,500,501,250}"];
+s3 -> s1  [key=0, label="USER ubuntu / 331"];
+s3 -> s4  [key=0, label="LIST / 226"];
+s3 -> s4  [key=1, label="ABOR / 226"];
+s3 -> s4  [key=2, label="MLSD / 226"];
+s3 -> s3  [key=0, label="others /{550,227,211,215,257,530,200,214,229,500,501,250}"];
+s4 -> s1  [key=0, label="USER ubuntu / 331"];
+s4 -> s3  [key=0, label="epsv / 229"];
+s4 -> s3  [key=1, label="pasv / 227"];
+s4 -> s4  [key=0, label="others /{550,211,226,215,257,530,200,214,500,451,501,250}"];
+}

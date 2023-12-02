@@ -1,6 +1,6 @@
 # ftp-statemodel-learner
 
-Modification on LearnLib to infer every FTP state model via **Active Learning**.
+LearnLib harness to infer every FTP state model via **Active Learning**.
 
 ## Setting the configuration file
 Before running the learner, you need to edit the *config.properties*. Here you find a typical setup:
@@ -12,18 +12,11 @@ Before running the learner, you need to edit the *config.properties*. Here you f
 
     [*server port*]
 - **commands**: USER ubuntu,NOOP,PWD,TYPE,PORT,CDUP,CWD,RETR,ABOR,DELE,PASS ubuntu,REST,SIZE,MKD,RMD,STOR,SYST,APPE,RNFR,RNTO,OPTS,AUTH,PBSZ,PROT,SITE
-
      [*list of commands, separated by a comma*]
-- **responsesToIgnore**: 150,220,214
-
-    [*some of the responses are either not important for the learning process or are sent before the proper response. We need to ignore these responses*]
+    **NB**:You don't have to add the *QUIT* command
 - **debug**: true
 
     [the default value is false] 
-
-- **resetCommand**: QUIT
-
-    [*the command used by FTP to close a session. You don't have to add this command into "commands"*]
 
 ## Running the learner 
 
@@ -41,6 +34,29 @@ If you enable the debug mode, you can see every request and response:
 
 ![alt text](./ftp-statemodel-learner.png "Learning")
 
-After a few seconds, the inferred state model is saved in a .dot file:
+The inferred state model is saved in a .dot file:
 
-![alt text](learnedModel-1.png "State model")
+![alt text](./learnedModel.png "State model")
+*Light FTP state model*
+## Cleaning the state model
+If you want to merge all the clouds into a single edge labelet with **"others/{list of response codes}"**, you can run the script simplify_model.py
+> python3 simplify_model.py <input_file> <output_file>
+
+to obtain something like this:
+
+![alt text](./learnedModel_clean.png "State model")
+*Light FTP state model*
+
+## Case studies 
+
+Implementation | Inferred | Number of states |
+--- | --- | --- | 
+*Light FTP* | Yes | 5 |
+*ProFTPd* | No | ? |
+*bftpd* | No | ? |
+*pure-ftp* | No | ? |
+
+
+## Todo
+
+1. Allow QUIT among the normal messages. This version crashes if QUIT is in the dictionary.

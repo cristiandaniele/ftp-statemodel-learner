@@ -11,7 +11,9 @@ import java.util.Properties;
 public class FTPLearner
 {
 	public static void main(final String[] args) throws IOException {
-
+		System.out.println("**************************");
+		System.out.println("***FTP LEARNER v. 2.0*****");
+		System.out.println("**************************");
 		final String currentDirectory = System.getProperty("user.dir");
 
 		Properties properties = new Properties();
@@ -29,21 +31,18 @@ public class FTPLearner
 		String[] commandArray;
 		String resetCommand;
 		try {
-			final String responseCodesString = properties.getProperty("responsesToIgnore");
-			responseCodes = responseCodesString.split(",");
 			ip = properties.getProperty("ip");
 			port = Integer.parseInt(properties.getProperty("port"));
 			debug = Boolean.parseBoolean(properties.getProperty("debug"));
 			final String commandsString = properties.getProperty("commands");
 			commandArray = commandsString.split(",");
-			resetCommand = properties.getProperty("resetCommand");
 		}
 		catch (Exception e) {
 			System.out.println("[ERROR] The config.properties file requires the following fields: \n- responseToIgnore \n- ip \n- port \n- commands\n- debug");
 			return;
 		}
 
-		SUL<String, String> sul = (SUL<String, String>)new FTPHandler(ip, port, responseCodes, debug,resetCommand);
+		SUL<String, String> sul = (SUL<String, String>)new FTPHandler(ip, port, debug);
 		Collection<String> inputAlphabet = ImmutableSet.copyOf((String[])commandArray);
 		System.out.println("[LOG]Learning ... ");
 		BasicLearner.runControlledExperiment((SUL<String, String>)sul, BasicLearner.LearningMethod.LStar, BasicLearner.TestingMethod.RandomWalk, inputAlphabet);
