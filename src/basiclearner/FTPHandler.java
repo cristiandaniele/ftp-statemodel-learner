@@ -69,8 +69,8 @@ public class FTPHandler implements SUL<String, String>
 		}
 		//			if(pasvSocket!=null) pasvSocket.close();
 		//			if(epsvSocket!=null) epsvSocket.close();
-	//					FTPHandler.out.write(resetCommand+CRLF);
-	//					FTPHandler.out.flush();
+						FTPHandler.out.write(resetCommand+CRLF);
+						FTPHandler.out.flush();
 		//			FTPHandler.out.close();
 		//			FTPHandler.in.close();
 					try {
@@ -196,7 +196,7 @@ public int openPasvSocket(String pasvResponse) throws UnknownHostException, IOEx
 	public String makeTransition(final String input) throws IOException, InterruptedException {
 		FTPHandler.out.write(String.valueOf(input) + "\r\n");
 		FTPHandler.out.flush();
-		int timeoutMillis = 100;
+		int timeoutMillis = 200;
 		String lastNonEmptyResponse = readLastNonEmptyResponse(timeoutMillis);
 		
 		if(lastNonEmptyResponse==null) {
