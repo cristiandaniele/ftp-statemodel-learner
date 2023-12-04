@@ -59,4 +59,4 @@ Implementation | Inferred | Number of states |
 
 ## Todo
 
-1. Allow QUIT among the normal messages. This version crashes if QUIT is in the dictionary.
+1. Allow QUIT among the normal messages. This version crashes if QUIT is in the dictionary. -> Done

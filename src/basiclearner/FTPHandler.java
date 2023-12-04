@@ -74,12 +74,16 @@ public class FTPHandler implements SUL<String, String>
 		//			FTPHandler.out.close();
 		//			FTPHandler.in.close();
 					try {
-						if(ftpSocket!=null)
+						if(ftpSocket!=null) {
 							ftpSocket.close();
-						if(pasvSocket!=null)
+						}
+						if(pasvSocket!=null) {
 							pasvSocket.close();
-						if(epsvSocket!=null)
+						}
+							
+						if(epsvSocket!=null) {
 							epsvSocket.close();
+						}	
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -103,6 +107,9 @@ public class FTPHandler implements SUL<String, String>
 
 	private static boolean containsResponseCode(String input) {
 		   // Iterate through each character in the string
+		if(input==null) {
+			return false;
+		}
         for (int i = 0; i < input.length() - 2; i++) {
             // Check if the current and the next two characters form a sequence of three consecutive digits
             if (Character.isDigit(input.charAt(i)) &&
@@ -131,9 +138,11 @@ public class FTPHandler implements SUL<String, String>
 
             if (currentTime - startTime >= timeoutMillis) {
                 // If the timeout has elapsed, there are different scenarios: 
-//            	1) I got the last message - fine -> break
-//            	2) I'm receiving a very long response (like after the help command) -> need to reset the counter until the end of the entire blob of date
-            	if(!containsResponseCode(lastNonEmptyResponse)) {
+            	// 1) I got the last message - fine -> break
+            	// 2) I'm receiving a very long response (like after the help command) -> need to reset the counter until the end of the entire blob of date
+            	if( !containsResponseCode(lastNonEmptyResponse)) {
+            		if(lastNonEmptyResponse==null)
+            			return null;
             		startTime = System.currentTimeMillis();
             	}
             	else {
@@ -149,8 +158,6 @@ public class FTPHandler implements SUL<String, String>
                 }
             }
         }
-        
-        
     }
 	
 	
@@ -189,8 +196,16 @@ public int openPasvSocket(String pasvResponse) throws UnknownHostException, IOEx
 	public String makeTransition(final String input) throws IOException, InterruptedException {
 		FTPHandler.out.write(String.valueOf(input) + "\r\n");
 		FTPHandler.out.flush();
-		int timeoutMillis = 150;
+		int timeoutMillis = 100;
 		String lastNonEmptyResponse = readLastNonEmptyResponse(timeoutMillis);
+		
+		if(lastNonEmptyResponse==null) {
+//			the server closed the connection (because of a QUIT command for example, I need to re-open it
+			createConnection(this.ip, this.port, this.responseCodes);
+			FTPHandler.out.write(String.valueOf(input) + "\r\n");
+			FTPHandler.out.flush();
+			lastNonEmptyResponse = readLastNonEmptyResponse(timeoutMillis);
+		}
 		if (this.VERBOSE) {
 			System.out.println("[DEBUG] " + input + " -> " + lastNonEmptyResponse.substring(0, 3) + " (" + lastNonEmptyResponse + ")");
 		}
@@ -202,7 +217,8 @@ public int openPasvSocket(String pasvResponse) throws UnknownHostException, IOEx
 
 			openPasvSocket(lastNonEmptyResponse);
 		}
-		
+		byte[] buffer = new byte[1024];
+
 		return lastNonEmptyResponse.substring(0, 3);
 	}
 }

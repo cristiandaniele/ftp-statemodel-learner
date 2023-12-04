@@ -277,10 +277,11 @@ public class BasicLearner {
 		LearningSetup learningSetup = new LearningSetup(sul, learningMethod, testingMethod, learnlibAlphabet);
 		try {
 			runControlledExperiment(learningSetup.learner, learningSetup.eqOracle, learningSetup.nrSymbols,
-					learningSetup.nrResets, learnlibAlphabet);
+			learningSetup.nrResets, learnlibAlphabet);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			System.out.println(e+" [ERROR]Cannot connect to the server, connection refused. Is it your FTP server online?:/");
+			e.printStackTrace();
+			System.out.println(e);
 		}
 	}
 
