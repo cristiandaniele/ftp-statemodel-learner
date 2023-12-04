@@ -23,26 +23,25 @@ public class FTPLearner
 			System.out.println("[ERROR] Problem reading config.properties file. It should be located at " + currentDirectory);
 			return;
 		}
-
-		String[] responseCodes;
 		String ip;
 		int port;
+		int waitingTime;
 		boolean debug;
 		String[] commandArray;
-		String resetCommand;
 		try {
 			ip = properties.getProperty("ip");
+			waitingTime = Integer.parseInt(properties.getProperty("waitingTime"));
 			port = Integer.parseInt(properties.getProperty("port"));
 			debug = Boolean.parseBoolean(properties.getProperty("debug"));
 			final String commandsString = properties.getProperty("commands");
 			commandArray = commandsString.split(",");
 		}
 		catch (Exception e) {
-			System.out.println("[ERROR] The config.properties file requires the following fields: \n- responseToIgnore \n- ip \n- port \n- commands\n- debug");
+			System.out.println("[ERROR] The config.properties file requires the following fields: \n- responseToIgnore \n- ip \n- port \n- commands\n- debug\n- waitingTime");
 			return;
 		}
 
-		SUL<String, String> sul = (SUL<String, String>)new FTPHandler(ip, port, debug);
+		SUL<String, String> sul = (SUL<String, String>)new FTPHandler(ip, port, debug,waitingTime);
 		Collection<String> inputAlphabet = ImmutableSet.copyOf((String[])commandArray);
 		System.out.println("[LOG]Learning ... ");
 		BasicLearner.runControlledExperiment((SUL<String, String>)sul, BasicLearner.LearningMethod.LStar, BasicLearner.TestingMethod.RandomWalk, inputAlphabet);

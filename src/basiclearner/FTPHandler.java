@@ -19,6 +19,7 @@ public class FTPHandler implements SUL<String, String>
 {
 	public String ip;
 	public Integer port;
+	public Integer waitingTime;
 	String resetCommand="quit";
 	public String[] responseCodes;
 	public static Socket ftpSocket;
@@ -31,10 +32,11 @@ public class FTPHandler implements SUL<String, String>
 	public static Socket pasvSocket;
 	private static final String CRLF = "\r\n";
 
-	public FTPHandler(final String ip, final Integer port, final boolean debug) {
+	public FTPHandler(final String ip, final Integer port, final boolean debug, final Integer waitingTime) {
 		this.ip = ip;
 		this.port = port;
 		this.VERBOSE = debug;
+		this.waitingTime=waitingTime;
 		ftpClient = new FTPClient();
 	}
 	
@@ -196,15 +198,14 @@ public int openPasvSocket(String pasvResponse) throws UnknownHostException, IOEx
 	public String makeTransition(final String input) throws IOException, InterruptedException {
 		FTPHandler.out.write(String.valueOf(input) + "\r\n");
 		FTPHandler.out.flush();
-		int timeoutMillis = 200;
-		String lastNonEmptyResponse = readLastNonEmptyResponse(timeoutMillis);
+		String lastNonEmptyResponse = readLastNonEmptyResponse(waitingTime);
 		
 		if(lastNonEmptyResponse==null) {
 //			the server closed the connection (because of a QUIT command for example, I need to re-open it
 			createConnection(this.ip, this.port, this.responseCodes);
 			FTPHandler.out.write(String.valueOf(input) + "\r\n");
 			FTPHandler.out.flush();
-			lastNonEmptyResponse = readLastNonEmptyResponse(timeoutMillis);
+			lastNonEmptyResponse = readLastNonEmptyResponse(waitingTime);
 		}
 		if (this.VERBOSE) {
 			System.out.println("[DEBUG] " + input + " -> " + lastNonEmptyResponse.substring(0, 3) + " (" + lastNonEmptyResponse + ")");
