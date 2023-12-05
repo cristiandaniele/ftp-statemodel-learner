@@ -32,10 +32,10 @@ public class FTPHandler implements SUL<String, String>
 	public static Socket pasvSocket;
 	private static final String CRLF = "\r\n";
 
-	public FTPHandler(final String ip, final Integer port, final boolean debug, final Integer waitingTime) {
+	public FTPHandler(final String ip, final Integer port, final boolean TRACE, final Integer waitingTime) {
 		this.ip = ip;
 		this.port = port;
-		this.VERBOSE = debug;
+		this.VERBOSE = TRACE;
 		this.waitingTime=waitingTime;
 		ftpClient = new FTPClient();
 	}
@@ -55,7 +55,7 @@ public class FTPHandler implements SUL<String, String>
 
 	public void pre() {
 		if (this.VERBOSE) {
-			System.out.println("[DEBUG] Starting SUL, connecting via Telnet");
+			System.out.println("[INFO] Starting SUL, connecting via Telnet");
 		}
 		try {
 			createConnection(this.ip, this.port, this.responseCodes);
@@ -67,7 +67,7 @@ public class FTPHandler implements SUL<String, String>
 
 	public void post() {
 		if (this.VERBOSE) {
-			System.out.println("[DEBUG] Shutting down SUL");
+			System.out.println("[INFO] Shutting down SUL");
 		}
 		//			if(pasvSocket!=null) pasvSocket.close();
 		//			if(epsvSocket!=null) epsvSocket.close();
@@ -75,22 +75,22 @@ public class FTPHandler implements SUL<String, String>
 						FTPHandler.out.flush();
 		//			FTPHandler.out.close();
 		//			FTPHandler.in.close();
-					try {
-						if(ftpSocket!=null) {
-							ftpSocket.close();
-						}
-						if(pasvSocket!=null) {
-							pasvSocket.close();
-						}
-							
-						if(epsvSocket!=null) {
-							epsvSocket.close();
-						}	
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						
-					}
+//					try {
+//						if(ftpSocket!=null) {
+//							ftpSocket.close();
+//						}
+//						if(pasvSocket!=null) {
+//							pasvSocket.close();
+//						}
+//							
+//						if(epsvSocket!=null) {
+//							epsvSocket.close();
+//						}	
+//					} catch (IOException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//						
+//					}
 	}
 
 	public String step(final String input) throws SULException {
@@ -139,7 +139,7 @@ public class FTPHandler implements SUL<String, String>
             long currentTime = System.currentTimeMillis();
             if (currentTime - startTime >= timeoutMillis) {
                 // If the timeout has elapsed, there are different scenarios: 
-            	// 1) I got the last message - fine -> break
+            	// 1) I got the last TRACE - fine -> break
             	// 2) I'm receiving a very long response (like after the help command) -> need to reset the counter until the end of the entire blob of date
             	if( !containsResponseCode(lastNonEmptyResponse)) {
             		if(lastNonEmptyResponse==null)
@@ -171,7 +171,7 @@ public int openEpsvSocket(String epsvResponse) throws UnknownHostException, IOEx
             int port= Integer.parseInt(matcher.group(1));
             epsvSocket = new Socket("127.0.0.1", port);
             if (this.VERBOSE) {
-    			System.out.println("[DEBUG] Opening socket epsv: 127.0.0.1" + " " + port);
+    			System.out.println("[NETWORK] Opening socket epsv: 127.0.0.1" + " " + port);
     		}
             return 0;
         } catch (NumberFormatException e) {
@@ -191,7 +191,7 @@ public int openPasvSocket(String pasvResponse) throws UnknownHostException, IOEx
             int port = Integer.parseInt(matcher.group(5)) * 256 + Integer.parseInt(matcher.group(6));
             pasvSocket=new Socket(ipAddress,port);
             if (this.VERBOSE) {
-    			System.out.println("[DEBUG] Opening socket pasv:" + ipAddress + " " + port);
+    			System.out.println("[INFO] Opening socket pasv:" + ipAddress + " " + port);
     		}
             return 0;
         } catch (NumberFormatException e) {
@@ -216,7 +216,7 @@ public int openPasvSocket(String pasvResponse) throws UnknownHostException, IOEx
 		}
 		
 		if (this.VERBOSE) {
-			System.out.println("[DEBUG] " + input + " -> " + lastNonEmptyResponse.substring(0, 3) + " (" + lastNonEmptyResponse + ")");
+			System.out.println("[TRACE] " + input + " -> " + lastNonEmptyResponse.substring(0, 3) + " (" + lastNonEmptyResponse + ")");
 		}
 		
 		//handling passive modes

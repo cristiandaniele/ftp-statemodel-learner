@@ -43,7 +43,7 @@ public class FTPLearner
 
 		SUL<String, String> sul = (SUL<String, String>)new FTPHandler(ip, port, debug,waitingTime);
 		Collection<String> inputAlphabet = ImmutableSet.copyOf((String[])commandArray);
-		System.out.println("[LOG]Learning ... ");
+		System.out.println("[INFO] Learning ... ");
 		BasicLearner.runControlledExperiment((SUL<String, String>)sul, BasicLearner.LearningMethod.LStar, BasicLearner.TestingMethod.RandomWalk, inputAlphabet);
 
 	}
