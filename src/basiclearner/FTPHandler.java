@@ -137,10 +137,6 @@ public class FTPHandler implements SUL<String, String>
                 }
             }
             long currentTime = System.currentTimeMillis();
-            if (this.VERBOSE==true) {
-            	System.out.println("[Debug for ProFTPD]"+lastNonEmptyResponse);
-            }
-            
             if (currentTime - startTime >= timeoutMillis) {
                 // If the timeout has elapsed, there are different scenarios: 
             	// 1) I got the last message - fine -> break
@@ -174,8 +170,12 @@ public int openEpsvSocket(String epsvResponse) throws UnknownHostException, IOEx
         try {
             int port= Integer.parseInt(matcher.group(1));
             epsvSocket = new Socket("127.0.0.1", port);
+            if (this.VERBOSE) {
+    			System.out.println("[DEBUG] Opening socket epsv: 127.0.0.1" + " " + port);
+    		}
             return 0;
         } catch (NumberFormatException e) {
+        	System.out.println("[ERROR] Problem on epsv socket");
             e.printStackTrace();
         }
     }
@@ -190,8 +190,12 @@ public int openPasvSocket(String pasvResponse) throws UnknownHostException, IOEx
             String ipAddress = matcher.group(1) + "." + matcher.group(2) + "." + matcher.group(3) + "." + matcher.group(4);
             int port = Integer.parseInt(matcher.group(5)) * 256 + Integer.parseInt(matcher.group(6));
             pasvSocket=new Socket(ipAddress,port);
+            if (this.VERBOSE) {
+    			System.out.println("[DEBUG] Opening socket pasv:" + ipAddress + " " + port);
+    		}
             return 0;
         } catch (NumberFormatException e) {
+        	System.out.println("[ERROR] Problem on pasv socket");
             e.printStackTrace();
         }
     }
@@ -204,25 +208,25 @@ public int openPasvSocket(String pasvResponse) throws UnknownHostException, IOEx
 		String lastNonEmptyResponse = readLastNonEmptyResponse(waitingTime);
 		
 		if(lastNonEmptyResponse==null) {
-//			the server closed the connection (because of a QUIT command for example, I need to re-open it
+			//the server closed the connection (because of a QUIT command for example, I need to re-open it
 			createConnection(this.ip, this.port, this.responseCodes);
 			FTPHandler.out.write(String.valueOf(input) + "\r\n");
 			FTPHandler.out.flush();
 			lastNonEmptyResponse = readLastNonEmptyResponse(waitingTime);
 		}
+		
 		if (this.VERBOSE) {
 			System.out.println("[DEBUG] " + input + " -> " + lastNonEmptyResponse.substring(0, 3) + " (" + lastNonEmptyResponse + ")");
 		}
+		
 		//handling passive modes
 		if((input.contains("EPSV")||input.contains("epsv"))&&lastNonEmptyResponse.substring(0,3).equals("229")) {
 			openEpsvSocket(lastNonEmptyResponse);
 		}
+		
 		if((input.contains("PASV")||input.contains("pasv"))&&lastNonEmptyResponse.substring(0,3).equals("227")) {
-
 			openPasvSocket(lastNonEmptyResponse);
 		}
-		byte[] buffer = new byte[1024];
-
 		return lastNonEmptyResponse.substring(0, 3);
 	}
 }
