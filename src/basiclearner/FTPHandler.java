@@ -124,7 +124,7 @@ public class FTPHandler implements SUL<String, String>
         return false; // No sequence of three consecutive digits found in the string
     }
 	
-	private static String readLastNonEmptyResponse(int timeoutMillis) throws IOException {
+	private String readLastNonEmptyResponse(int timeoutMillis) throws IOException {
         String lastNonEmptyResponse = null;
         long startTime = System.currentTimeMillis();
         while (true) {  
@@ -137,7 +137,10 @@ public class FTPHandler implements SUL<String, String>
                 }
             }
             long currentTime = System.currentTimeMillis();
-
+            if (this.VERBOSE==true) {
+            	System.out.println("[Debug for ProFTPD]"+lastNonEmptyResponse);
+            }
+            
             if (currentTime - startTime >= timeoutMillis) {
                 // If the timeout has elapsed, there are different scenarios: 
             	// 1) I got the last message - fine -> break
