@@ -51,12 +51,15 @@ to obtain something like this:
 
 Implementation | Inferred | Number of states |
 --- | --- | --- | 
-*Light FTP* | Yes | 5 |
+[*Light FTP*](./State%20models/Light%20FTP.png) | Yes | 5 |
+[*bftpd*](./State%20models/bftpd.png ) | Yes | 7 |
 *ProFTPd* | No | ? |
-*bftpd* | No | ? |
 *pure-ftp* | No | ? |
 
 
 ## Todo
 
-1. Allow QUIT among the normal messages. This version crashes if QUIT is in the dictionary. -> Done
+1. Trying to run ProFTPd state models, the learner cannot handle the second response after the list command.
+   
+   It should save **226 Transfer complete. Closing data connection.** but it's stuck with the message **150 Opening ASCII mode data connection for file list**.
+

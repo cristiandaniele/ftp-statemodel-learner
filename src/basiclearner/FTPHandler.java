@@ -71,26 +71,27 @@ public class FTPHandler implements SUL<String, String>
 		}
 		//			if(pasvSocket!=null) pasvSocket.close();
 		//			if(epsvSocket!=null) epsvSocket.close();
-						FTPHandler.out.write(resetCommand+CRLF);
-						FTPHandler.out.flush();
+		//			FTPHandler.out.write(resetCommand+CRLF);
+		//			FTPHandler.out.flush();
 		//			FTPHandler.out.close();
 		//			FTPHandler.in.close();
-//					try {
-//						if(ftpSocket!=null) {
-//							ftpSocket.close();
-//						}
-//						if(pasvSocket!=null) {
-//							pasvSocket.close();
-//						}
-//							
-//						if(epsvSocket!=null) {
-//							epsvSocket.close();
-//						}	
-//					} catch (IOException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//						
-//					}
+		System.out.println("[NETWORK] Closing all the sockets");
+					try {
+						if(ftpSocket!=null) {
+							ftpSocket.close();
+						}
+						if(pasvSocket!=null) {
+							pasvSocket.close();
+						}
+							
+						if(epsvSocket!=null) {
+							epsvSocket.close();
+						}	
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						
+					}
 	}
 
 	public String step(final String input) throws SULException {
