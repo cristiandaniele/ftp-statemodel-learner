@@ -70,12 +70,11 @@ public class FTPHandler implements SUL<String, String>
 			System.out.println("[INFO] Shutting down SUL");
 		}
 		//			if(pasvSocket!=null) pasvSocket.close();
-		//			if(epsvSocket!=null) epsvSocket.close();
-		//			FTPHandler.out.write(resetCommand+CRLF);
-		//			FTPHandler.out.flush();
-		//			FTPHandler.out.close();
-		//			FTPHandler.in.close();
-		System.out.println("[NETWORK] Closing all the sockets");
+//					if(epsvSocket!=null) epsvSocket.close();
+//		
+//					FTPHandler.out.write("quit"+CRLF);
+//					FTPHandler.out.flush();
+					System.out.println("[NETWORK] Closing all the sockets");
 					try {
 						if(ftpSocket!=null) {
 							ftpSocket.close();
@@ -208,7 +207,7 @@ public int openPasvSocket(String pasvResponse) throws UnknownHostException, IOEx
 		FTPHandler.out.flush();
 		String lastNonEmptyResponse = readLastNonEmptyResponse(waitingTime);
 		
-		if(lastNonEmptyResponse==null) {
+		while(lastNonEmptyResponse==null) {
 			//the server closed the connection (because of a QUIT command for example, I need to re-open it
 			createConnection(this.ip, this.port, this.responseCodes);
 			FTPHandler.out.write(String.valueOf(input) + "\r\n");

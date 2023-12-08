@@ -52,9 +52,10 @@ to obtain something like this:
 Implementation | Inferred | Number of states |
 --- | --- | --- | 
 [*Light FTP*](./State%20models/Light%20FTP.png) | Yes | 5 |
-[*bftpd*](./State%20models/bftpd.png ) | Yes | 7 |
+[*bftpd*](./State%20models/bftpd.png ) | Yes | 8 |
+[*pure-ftp*](./State%20models/Pure-FTPd.png) | Yes | 5 |
 *ProFTPd* | No | ? |
-*pure-ftp* | No | ? |
+
 
 
 ## Todo

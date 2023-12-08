@@ -1,0 +1,28 @@
+digraph  {
+s0;
+s1;
+s2;
+s3;
+s4;
+s0 -> s1  [key=0, label="USER test / 331"];
+s0 -> s0  [key=0, label="others /{331,200,530,504,214,221,503,215,501,211,500}"];
+s1 -> s2  [key=0, label="PASS test / 230"];
+s1 -> s0  [key=0, label="USER xxx / 331"];
+s1 -> s0  [key=1, label="PASS xxx / 530"];
+s1 -> s0  [key=2, label="quit / 221"];
+s1 -> s1  [key=0, label="others /{331,530,200,504,214,503,215,501,211,500}"];
+s2 -> s3  [key=0, label="epsv / 229"];
+s2 -> s3  [key=1, label="pasv / 227"];
+s2 -> s0  [key=0, label="quit / 221"];
+s2 -> s2  [key=0, label="others /{257,200,530,550,504,214,503,425,250,215,501,226,211,500}"];
+s3 -> s4  [key=0, label="LIST / 226"];
+s3 -> s4  [key=1, label="MLSD / 226"];
+s3 -> s0  [key=0, label="quit / 221"];
+s3 -> s3  [key=0, label="others /{257,200,530,550,504,214,503,229,250,215,501,226,211,500,227}"];
+s4 -> s0  [key=0, label="LIST / 530"];
+s4 -> s0  [key=1, label="MLSD / 530"];
+s4 -> s0  [key=2, label="quit / 221"];
+s4 -> s3  [key=0, label="epsv / 229"];
+s4 -> s3  [key=1, label="pasv / 227"];
+s4 -> s4  [key=0, label="others /{257,200,530,550,504,214,503,250,215,501,226,211,500}"];
+}

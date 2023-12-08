@@ -9,3 +9,8 @@
 
 ![alt text](./bftpd.png)
 *bftpd state model*
+
+## 2. Pure-FTPd
+
+![alt text](./Pure-FTPd.png)
+*Pure-FTPd state model*
