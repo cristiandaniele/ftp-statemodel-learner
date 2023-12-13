@@ -10,7 +10,12 @@
 ![alt text](./bftpd.png)
 *bftpd state model*
 
-## 2. Pure-FTPd
+## 3. Pure-FTPd
 
 ![alt text](./Pure-FTPd.png)
 *Pure-FTPd state model*
+
+## 4. ProFTPd
+
+![alt text](./ProFTPd_clean.dot) 
+*ProFTPd model*
