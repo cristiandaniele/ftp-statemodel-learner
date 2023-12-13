@@ -17,5 +17,5 @@
 
 ## 4. ProFTPd
 
-![alt text](./ProFTPd_clean.dot) 
+![alt text](./ProFTPd.png) 
 *ProFTPd model*
