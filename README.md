@@ -54,7 +54,7 @@ Implementation | Inferred | Number of states |
 [*Light FTP*](./State%20models/Light%20FTP.png) | Yes | 5 |
 [*bftpd*](./State%20models/bftpd.png ) | Yes | 8 |
 [*pure-ftp*](./State%20models/Pure-FTPd.png) | Yes | 5 |
-[*ProFTPd*](./State%20models/ProFTPd_clean.dot) | Yes | 7 |
+[*ProFTPd*](./State%20models/ProFTPd.png) | Yes | 7 |
 
 
 
