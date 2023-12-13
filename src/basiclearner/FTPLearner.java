@@ -12,7 +12,7 @@ public class FTPLearner
 {
 	public static void main(final String[] args) throws IOException {
 		System.out.println("**************************");
-		System.out.println("***FTP LEARNER v. 2.2*****");
+		System.out.println("***FTP LEARNER v. 2.6*****");
 		System.out.println("**************************");
 		final String currentDirectory = System.getProperty("user.dir");
 

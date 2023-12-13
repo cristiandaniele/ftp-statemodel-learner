@@ -69,28 +69,26 @@ public class FTPHandler implements SUL<String, String>
 		if (this.VERBOSE) {
 			System.out.println("[INFO] Shutting down SUL");
 		}
-		//			if(pasvSocket!=null) pasvSocket.close();
-//					if(epsvSocket!=null) epsvSocket.close();
-//		
-//					FTPHandler.out.write("quit"+CRLF);
-//					FTPHandler.out.flush();
-					System.out.println("[NETWORK] Closing all the sockets");
-					try {
-						if(ftpSocket!=null) {
-							ftpSocket.close();
-						}
-						if(pasvSocket!=null) {
-							pasvSocket.close();
-						}
-							
-						if(epsvSocket!=null) {
-							epsvSocket.close();
-						}	
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						
-					}
+			System.out.println("[INFO] Sending quit command");
+			FTPHandler.out.write("quit"+CRLF);
+			FTPHandler.out.flush();
+			System.out.println("[NETWORK] Closing all the sockets");
+			try {
+				if(ftpSocket!=null) {
+					ftpSocket.close();
+				}
+				if(pasvSocket!=null) {
+					pasvSocket.close();
+				}
+					
+				if(epsvSocket!=null) {
+					epsvSocket.close();
+				}	
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				
+			}
 	}
 
 	public String step(final String input) throws SULException {
@@ -130,8 +128,13 @@ public class FTPHandler implements SUL<String, String>
         while (true) {  
             if (in.ready()) {
                 // If there is data to read, read the line
-                String response = in.readLine();
-                if (response != null && !response.isEmpty() ) {
+                String response=in.readLine();
+                
+                if(response.substring(0,3).equals("150") ) {
+                	if(VERBOSE) System.out.println("[INFO] Multiple lines detected");
+                	response=in.readLine();
+                }
+                if (response != null && !response.isEmpty()) {
                     // Update the last non-empty response
                     lastNonEmptyResponse = response;
                 }
