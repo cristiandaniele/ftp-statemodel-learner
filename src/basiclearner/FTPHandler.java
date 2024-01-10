@@ -27,15 +27,17 @@ public class FTPHandler implements SUL<String, String>
 	public static BufferedReader in;
 	public static Scanner scan;
 	private boolean VERBOSE;
+	private boolean timing_info;
 	FTPClient ftpClient;
 	public static Socket epsvSocket;
 	public static Socket pasvSocket;
 	private static final String CRLF = "\r\n";
 
-	public FTPHandler(final String ip, final Integer port, final boolean TRACE, final Integer waitingTime) {
+	public FTPHandler(final String ip, final Integer port, final boolean verbose, final Integer waitingTime, final boolean timing_info) {
 		this.ip = ip;
 		this.port = port;
-		this.VERBOSE = TRACE;
+		this.VERBOSE = verbose;
+		this.timing_info = timing_info;
 		this.waitingTime=waitingTime;
 		ftpClient = new FTPClient();
 	}
@@ -206,6 +208,7 @@ public int openPasvSocket(String pasvResponse) throws UnknownHostException, IOEx
 }
 
 	public String makeTransition(final String input) throws IOException, InterruptedException {
+		long startTime = System.currentTimeMillis();
 		FTPHandler.out.write(String.valueOf(input) + "\r\n");
 		FTPHandler.out.flush();
 		String lastNonEmptyResponse = readLastNonEmptyResponse(waitingTime);
@@ -217,6 +220,7 @@ public int openPasvSocket(String pasvResponse) throws UnknownHostException, IOEx
 			FTPHandler.out.flush();
 			lastNonEmptyResponse = readLastNonEmptyResponse(waitingTime);
 		}
+		 long endTime = System.currentTimeMillis();
 		
 		if (this.VERBOSE) {
 			System.out.println("[TRACE] " + input + " -> " + lastNonEmptyResponse.substring(0, 3) + " (" + lastNonEmptyResponse + ")");
@@ -230,6 +234,6 @@ public int openPasvSocket(String pasvResponse) throws UnknownHostException, IOEx
 		if((input.contains("PASV")||input.contains("pasv"))&&lastNonEmptyResponse.substring(0,3).equals("227")) {
 			openPasvSocket(lastNonEmptyResponse);
 		}
-		return lastNonEmptyResponse.substring(0, 3);
+		return lastNonEmptyResponse.substring(0, 3).concat(" - "+((endTime - startTime) /100)+"s");
 	}
 }

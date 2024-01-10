@@ -18,6 +18,10 @@ Before running the learner, you need to edit the *config.properties*. Here you f
 
     [the default value is false] 
 
+- **timing_info**: true
+  
+  [if enabled, the learner will add the cost -- in terms of seconds -- for every transition]
+
 ## Running the learner 
 
 - **Via jar file:**
@@ -39,7 +43,7 @@ The inferred state model is saved in a .dot file:
 ![alt text](./learnedModel.png "State model")
 *Light FTP state model*
 ## Cleaning the state model
-If you want to merge all the clouds into a single edge labelet with **"others/{list of response codes}"**, you can run the script simplify_model.py
+If you want to merge all the clouds into a single edge labelled with **"others/{list of response codes}"**, you can run the script simplify_model.py
 > python3 simplify_model.py <input_file> <output_file>
 
 to obtain something like this:

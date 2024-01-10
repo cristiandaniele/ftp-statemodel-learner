@@ -28,12 +28,14 @@ public class FTPLearner
 		int waitingTime;
 		boolean debug;
 		String[] commandArray;
+		boolean timing_info;
 		try {
 			ip = properties.getProperty("ip");
 			waitingTime = Integer.parseInt(properties.getProperty("waitingTime"));
 			port = Integer.parseInt(properties.getProperty("port"));
 			debug = Boolean.parseBoolean(properties.getProperty("debug"));
 			final String commandsString = properties.getProperty("commands");
+			timing_info = Boolean.parseBoolean(properties.getProperty("timing_info"));
 			commandArray = commandsString.split(",");
 		}
 		catch (Exception e) {
@@ -41,7 +43,7 @@ public class FTPLearner
 			return;
 		}
 
-		SUL<String, String> sul = (SUL<String, String>)new FTPHandler(ip, port, debug,waitingTime);
+		SUL<String, String> sul = (SUL<String, String>)new FTPHandler(ip, port, debug,waitingTime,timing_info);
 		Collection<String> inputAlphabet = ImmutableSet.copyOf((String[])commandArray);
 		System.out.println("[INFO] Learning ... ");
 		BasicLearner.runControlledExperiment((SUL<String, String>)sul, BasicLearner.LearningMethod.LStar, BasicLearner.TestingMethod.RandomWalk, inputAlphabet);
