@@ -64,7 +64,5 @@ Implementation | Inferred | Number of states |
 
 ## Todo
 
-1. Trying to run ProFTPd state models, the learner cannot handle the second response after the list command.
-   
-   It should save **226 Transfer complete. Closing data connection.** but it's stuck with the message **150 Opening ASCII mode data connection for file list**.
+
 
